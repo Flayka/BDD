@@ -16,9 +16,9 @@ public class VerificationPage extends AkitaPage {
     @Name("Продолжить")
     private SelenideElement verifyButton;
 
-    public DashboardPage validVerify(DataHelper.VerificationCode verificationCode) {
+    public CardPage validVerify(DataHelper.VerificationCode verificationCode) {
         codeField.setValue(verificationCode.getCode());
         verifyButton.click();
-        return Selenide.page(DashboardPage.class);
+        return Selenide.page(CardPage.class);
     }
 }

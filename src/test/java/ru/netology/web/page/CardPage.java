@@ -1,35 +1,32 @@
 package ru.netology.web.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import lombok.val;
+import org.openqa.selenium.support.FindBy;
+import ru.alfabank.alfatest.cucumber.annotations.Name;
+import ru.alfabank.alfatest.cucumber.api.AkitaPage;
 
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class CardPage {
-    private SelenideElement cardPage = $("[data-test-id='dashboard']");
+@Name("Дашбоард")
+public class CardPage extends AkitaPage {
+
+    @FindBy(css = "[data-test-id='dashboard']")
+    private SelenideElement cardPage;
+
+    @FindBy(css = ".list__item [data-test-id=action-deposit]")
+    @Name("Пополнить Карту 1")
+    private SelenideElement replenishCard1;
 
     private ElementsCollection cards = $$(".list__item");
     private final String balanceStart = "баланс: ";
     private final String balanceEnd = " р.";
 
-    private SelenideElement replenishCard1 = cards.first().$("[data-test-id=action-deposit]");
-    private SelenideElement replenishCard2 = cards.last().$("[data-test-id=action-deposit]");
-    private SelenideElement reload = $("[data-test-id='action-reload']");
-
-
-    public CardPage() {
-        cardPage.shouldBe(visible);
-    }
-
-    public void card1Replenish() {
+    public CardPageReplenish card1Replenish() {
         replenishCard1.click();
-    }
-
-    public void card2Replenish() {
-        replenishCard2.click();
+        return Selenide.page(CardPageReplenish.class);
     }
 
     public int getCard1Balance() {
@@ -38,18 +35,6 @@ public class CardPage {
     }
 
     private int extractBalanceCard1(String text) {
-        val start = text.indexOf(balanceStart);
-        val end = text.indexOf(balanceEnd);
-        val value = text.substring(start + balanceStart.length(), end);
-        return Integer.parseInt(value);
-    }
-
-    public int getCard2Balance() {
-        val text = cards.last().text();
-        return extractBalanceCard2(text);
-    }
-
-    private int extractBalanceCard2(String text) {
         val start = text.indexOf(balanceStart);
         val end = text.indexOf(balanceEnd);
         val value = text.substring(start + balanceStart.length(), end);

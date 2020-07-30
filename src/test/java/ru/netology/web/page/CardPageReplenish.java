@@ -1,32 +1,28 @@
 package ru.netology.web.page;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.support.FindBy;
+import ru.alfabank.alfatest.cucumber.annotations.Name;
+import ru.alfabank.alfatest.cucumber.api.AkitaPage;
 import ru.netology.web.data.DataHelper;
 
-import static com.codeborne.selenide.Condition.visible;
-import static com.codeborne.selenide.Selenide.$;
+@Name("Перевод")
+public class CardPageReplenish extends AkitaPage {
+    @FindBy(css = "[data-test-id='amount'] .input__control")
+    @Name("Сумма")
+    private SelenideElement sumField;
+    @FindBy(css = "[data-test-id='from'] .input__control")
+    @Name("Перевод с карты")
+    private SelenideElement cardFrom;
+    @FindBy(css = "[data-test-id='action-transfer']")
+    @Name("Пополнить")
+    private SelenideElement replenish;
 
-public class CardPageReplenish {
-    private SelenideElement sum = $("[data-test-id='amount'] .input__control");
-    private SelenideElement cardFrom = $("[data-test-id='from'] .input__control");
-    private SelenideElement replenish = $("[data-test-id='action-transfer']");
-    private SelenideElement cardPageReplenish = $("[data-test-id='dashboard']");
-
-    public CardPageReplenish() {
-        cardPageReplenish.shouldBe(visible);
-    }
-
-    public CardPage replenishCard1ToCard2(DataHelper.CardInfo cardInfo) {
-        sum.setValue(cardInfo.getSum());
+    public CardPage replenishCard1ToCard2(DataHelper.CardInfo cardInfo, String sum) {
+        sumField.setValue(sum);
         cardFrom.setValue(cardInfo.getCardFrom());
         replenish.click();
-        return new CardPage();
-    }
-
-    public CardPage replenishCard2ToCard1(DataHelper.CardInfo card2ToCard1) {
-        sum.setValue(card2ToCard1.getSum());
-        cardFrom.setValue(card2ToCard1.getCardFrom());
-        replenish.click();
-        return new CardPage();
+        return Selenide.page(CardPage.class);
     }
 }
